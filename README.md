@@ -1,5 +1,5 @@
 # Conway's Game of Life
-I couldn't find an existing version of the Game of Life that ran efficiently enough in Python, so I built one myself.
+I couldn't find an existing version of the Game of Life that ran efficiently at larger scales in Python, so I built one myself.
 
 More improvements to come...
 
