@@ -3,12 +3,11 @@ from tkinter import Button, Tk
 
 
 class ConwayTk:
-    def __init__(self, width, height, scale, interval, random):
-        self.scale = scale
+    def __init__(self, rows: int=32, columns: int=16, interval: int=100, random: bool=False):
+        self.rows = rows
+        self.columns = columns
         self.interval = interval
-        self.rows = width//scale
-        self.columns = height//scale
-        self.data_array = self.create_2d_array(value=0, random=random)
+        self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
         self.paused = True
     
@@ -96,5 +95,5 @@ class ConwayTk:
 
 
 if __name__ == '__main__':
-    game = ConwayTk(width=1920, height=1080, scale=40, interval=100, random=False)
+    game = ConwayTk(random=True)
     game.run()
