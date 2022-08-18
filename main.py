@@ -13,7 +13,7 @@ class ConwayTk:
         self.paused = True
     
 
-    def create_2d_array(self, value=0, random=False):
+    def create_2d_array(self, value: None|int=0, random: bool=False):
         if random:
             return [[randint(0, 1) for _ in range(self.rows)] for _ in range(self.columns)]
         else:
@@ -33,7 +33,7 @@ class ConwayTk:
                 self.button_array[y][x] = button
 
     
-    def get_neighbors(self, x, y):
+    def get_neighbors(self, x: int, y: int):
         total = 0
 
         for n in range(-1, 2):
@@ -46,7 +46,7 @@ class ConwayTk:
         return total
     
 
-    def click(self, x, y, button):
+    def click(self, x: int, y: int, button: Button):
         if button['bg'] == 'white':
             self.data_array[y][x] = 0
             button['bg'] = 'black'
@@ -60,8 +60,8 @@ class ConwayTk:
         self.life(self.paused)
 
 
-    def life(self, paused):
-        next = self.create_2d_array(0)
+    def life(self, paused: bool):
+        next = self.create_2d_array(value=0)
 
         if not paused:
             while True:
