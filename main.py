@@ -27,10 +27,7 @@ class ConwayTk:
         value : value to insert into the array
         random : if True, randomly insert live cells into the data array
         """
-        if random:
-            return [[randint(0, 1) for _ in range(self.rows)] for _ in range(self.columns)]
-        else:
-            return [[value for _ in range(self.rows)] for _ in range(self.columns)]
+        return [[value if not random else randint(0, 1) for _ in range(self.rows)] for _ in range(self.columns)]
 
 
     def draw_grid(self):
@@ -152,7 +149,7 @@ class ConwayTk:
         self.file_menu.add_command(label='Pause', command=self.pause, accelerator='|   Space')
         self.file_menu.add_command(label='Reset', command=self.pause, accelerator='|   R')
         self.file_menu.add_command(label='Configure', command=None, accelerator='|   C')
-        
+
         self.bg_frame.pack(expand=True, fill='both')
         self.grid_frame.pack(side='top', anchor='c', padx=5, pady=20)
 
