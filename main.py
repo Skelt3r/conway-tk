@@ -5,7 +5,7 @@ from tkinter import Button, Frame, Label, Menu, Tk
 class ConwayTk:
     def __init__(self, columns: int=48, rows: int=24, interval: int=100, random: bool=False):
         """
-        Initialize base variables.
+        Accept configuration settings and initialize base variables.
 
         columns : number of columns to generate
         rows : number of rows to generate
@@ -17,12 +17,13 @@ class ConwayTk:
         self.interval = interval
         self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
+        self.resolution = '1920x1080'
         self.paused = True
     
 
     def create_2d_array(self, value: None|int=0, random: bool=False):
         """
-        Create a two-dimensional array.
+        Create a two-dimensional array. Randomly populate or insert a static value.
 
         value : value to insert into the array
         random : if True, randomly insert live cells into the data array
@@ -47,18 +48,18 @@ class ConwayTk:
     
     def get_neighbors(self, x: int, y: int):
         """
-        Return the total number neighbors to the current x-y axis.
+        Return the total number neighbors for the current x-y axis.
 
-        x : the current x-axis integer
-        y : the current y-axis integer
+        x : the current x-axis index
+        y : the current y-axis index
         """
         total = 0
 
         for m in range(-1, 2):
             for n in range(-1, 2):
-                _x = (x+m+self.rows) % self.rows
-                _y = (y+n+self.columns) % self.columns
-                total += self.data_array[_y][_x]
+                x_ = (x+m+self.rows) % self.rows
+                y_ = (y+n+self.columns) % self.columns
+                total += self.data_array[y_][x_]
 
         total -= self.data_array[y][x]
         return total
@@ -68,8 +69,8 @@ class ConwayTk:
         """
         Toggle button state when clicked.
 
-        x : the current x-axis integer
-        y : the current y-axis integer
+        x : the current x-axis index
+        y : the current y-axis index
         button : the current Button widget
         """
         if button['bg'] == 'white':
@@ -104,7 +105,7 @@ class ConwayTk:
 
         paused : the current pause state
         """
-        next = self.create_2d_array(value=0)
+        next_cycle = self.create_2d_array(value=0)
 
         if not paused:
             while True:
@@ -115,14 +116,14 @@ class ConwayTk:
 
                         if state == 0 and neighbors == 3:
                             self.button_array[y][x].config(bg='white')
-                            next[y][x] = 1
+                            next_cycle[y][x] = 1
                         elif state == 1 and (neighbors < 2 or neighbors > 3):
                             self.button_array[y][x].config(bg='black')
-                            next[y][x] = 0
+                            next_cycle[y][x] = 0
                         else:
-                            next[y][x] = state
+                            next_cycle[y][x] = state
 
-                self.data_array = next
+                self.data_array = next_cycle
                 self.root.after(self.interval, lambda: self.life(self.paused))
 
                 if self.root.destroy:
@@ -134,7 +135,7 @@ class ConwayTk:
 
         self.root = Tk()
         self.root.title('Conway\'s Game of Life')
-        self.root.geometry('1920x1080')
+        self.root.geometry(self.resolution)
         
         self.bg_frame = Frame(self.root, bg='lightgrey')
         self.grid_frame = Frame(self.bg_frame)
