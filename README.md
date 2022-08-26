@@ -1,6 +1,26 @@
 # Conway's Game of Life
-I couldn't find an existing version of the Game of Life that ran efficiently at larger scales in Python, nor one built with Tkinter, so I made one myself.
 
-Many improvements to come...
+A decently efficient version of the Game of Life written in Python/Tkinter.
+
+## Hotkeys
+Save Pattern : S  
+Load Pattern : L  
+Pause Game   : Space  
+Reset Board  : R  
+Clear Board  : C  
+
+---
+
+## Initializing
+
+```python
+game = ConwayTk(columns=48,    # number of columns to generate
+                rows=24,       # number of rows to generate
+                interval=100,  # number of milliseconds between each life cycle
+                random=True)   # if True, randomly insert live cells into the data array            
+game.run()
+```
+
+---
 
 Inspired by [Joseph Bakulikira's](https://github.com/Josephbakulikira) [PyGame version](https://github.com/Josephbakulikira/Conway-s-Game-of-life---Python) of the Game of Life.
