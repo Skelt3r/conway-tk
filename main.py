@@ -1,5 +1,8 @@
+from pickle import dump, load
 from random import randint
+from rich import print
 from tkinter import Button, Frame, Label, Menu, Tk
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 
 class ConwayTk:
@@ -17,7 +20,6 @@ class ConwayTk:
         self.interval = interval
         self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
-        self.resolution = '1920x1080'
         self.paused = True
     
 
@@ -29,6 +31,15 @@ class ConwayTk:
         random : if True, randomly insert live cells into the data array
         """
         return [[value if not random else randint(0, 1) for _ in range(self.rows)] for _ in range(self.columns)]
+
+    
+    def loading_screen(self):
+        """Display a loading message while generating the button grid."""
+
+        loading = Label(self.root, font=('Calibri', 36), text='Loading...')
+        loading.place(relx=0.45, rely=0.4)
+        self.draw_grid()
+        loading.after(100, loading.destroy)
 
 
     def draw_grid(self):
@@ -83,15 +94,42 @@ class ConwayTk:
 
     def save_pattern(self):
         """Save the current pattern."""
+        filename = asksaveasfilename(defaultextension='.dat', filetypes=[('DAT Files', '*.dat')], initialdir='./patterns')
+        if filename != '':
+            with open(filename, 'wb') as savefile:
+                dump(self.data_array, savefile)
 
 
     def load_pattern(self):
         """Load a saved pattern."""
+        filename = askopenfilename(filetypes=[('DAT Files', '*.dat')], initialdir='./patterns')
+        if filename != '':
+            with open(filename, 'rb') as loadfile:
+                self.data_array = load(loadfile)
+            self.root.destroy()
+            self.paused = True
+            self.run()
 
 
     def configure(self):
         """Configure the game parameters."""
+
+
+    def reset(self):
+        """Randomize the state of the board."""
+        self.root.destroy()
+        self.paused = True
+        self.data_array = self.create_2d_array(random=True)
+        self.run()
     
+
+    def clear(self):
+        """Clear all live cells from the board."""
+        self.root.destroy()
+        self.paused = True
+        self.data_array = self.create_2d_array(value=0)
+        self.run()
+
 
     def pause(self):
         """Pause or unpause the game."""
@@ -135,7 +173,6 @@ class ConwayTk:
 
         self.root = Tk()
         self.root.title('Conway\'s Game of Life')
-        self.root.geometry(self.resolution)
         
         self.bg_frame = Frame(self.root, bg='lightgrey')
         self.grid_frame = Frame(self.bg_frame)
@@ -144,20 +181,33 @@ class ConwayTk:
         self.file_menu = Menu(self.menu_bar, tearoff=0)
 
         self.menu_bar.add_cascade(label='File', menu=self.file_menu)
-        self.file_menu.add_command(label='Save Pattern', command=None, accelerator='|   S')
-        self.file_menu.add_command(label='Load Pattern', command=None, accelerator='|   L')
+        self.file_menu.add_command(label='Save Pattern', command=self.save_pattern, accelerator='|   S')
+        self.file_menu.add_command(label='Load Pattern', command=self.load_pattern, accelerator='|   L')
         self.file_menu.add_separator()
         self.file_menu.add_command(label='Pause', command=self.pause, accelerator='|   Space')
-        self.file_menu.add_command(label='Reset', command=self.pause, accelerator='|   R')
-        self.file_menu.add_command(label='Configure', command=None, accelerator='|   C')
+        self.file_menu.add_command(label='Reset', command=self.reset, accelerator='|   R')
+        self.file_menu.add_command(label='Clear', command=self.clear, accelerator='|   C')
+        # self.file_menu.add_command(label='Configure', command=self.configure, accelerator='|   F')
 
         self.bg_frame.pack(expand=True, fill='both')
-        self.grid_frame.pack(side='top', anchor='c', padx=5, pady=20)
+        self.grid_frame.pack(side='top', anchor='c')
 
-        self.draw_grid()
+        self.loading_screen()
         self.life(self.paused)
 
         self.root.bind_all('<space>', lambda _: self.pause())
+        self.root.bind_all('s', lambda _: self.save_pattern())
+        self.root.bind_all('S', lambda _: self.save_pattern())
+        self.root.bind_all('l', lambda _: self.load_pattern())
+        self.root.bind_all('L', lambda _: self.load_pattern())
+        self.root.bind_all('r', lambda _: self.reset())
+        self.root.bind_all('R', lambda _: self.reset())
+        self.root.bind_all('c', lambda _: self.clear())
+        self.root.bind_all('C', lambda _: self.clear())
+        # self.root.bind_all('f', lambda _: self.configure())
+        # self.root.bind_all('F', lambda _: self.configure())
+
+        self.root.focus_force()
         self.root.config(menu=self.menu_bar)
         self.root.mainloop()
 
