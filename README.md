@@ -1,6 +1,6 @@
 # Conway's Game of Life
 
-A decently efficient version of the Game of Life written in Python.
+A decently efficient version of the Game of Life written in Python v3.10.4.
 
 ## Hotkeys
 Save Pattern : S  
