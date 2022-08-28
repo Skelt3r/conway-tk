@@ -1,7 +1,7 @@
 from pickle import dump, load
 from random import randint
 from rich import print
-from tkinter import Button, Frame, IntVar, Label, Menu, Menubutton, OptionMenu, Spinbox, StringVar, Tk, Toplevel
+from tkinter import Button, Frame, IntVar, Label, Menu, OptionMenu, Spinbox, StringVar, Tk, Toplevel
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 
@@ -117,6 +117,7 @@ class ConwayTk:
     def configure(self):
         """Configure the game parameters."""
         def apply():
+            """Apply the current configuration settings and reboot the app."""
             self.rows = num_rows.get()
             self.columns = num_cols.get()
             self.interval = int_ms.get()
