@@ -15,10 +15,12 @@ Clear Board    : C
 ## Initializing
 
 ```python
-game = ConwayTk(columns=48,    # number of columns to generate
-                rows=24,       # number of rows to generate
-                interval=100,  # number of milliseconds between each life cycle
-                random=True)   # if True, randomly insert live cells into the data array            
+game = ConwayTk(columns=48,         # number of columns to generate
+                rows=24,            # number of rows to generate
+                interval=100,       # number of milliseconds between each life cycle
+                live_color='white'  # live cell color
+                dead_color='black'  # dead cell color
+                random=True)        # if True, randomly insert live cells into the data array            
 game.run()
 ```
 
