@@ -1,7 +1,7 @@
 from pickle import dump, load
 from random import randint
 from rich import print
-from tkinter import Button, Frame, Label, Menu, Tk
+from tkinter import Button, Frame, IntVar, Label, Menu, Menubutton, OptionMenu, Spinbox, StringVar, Tk, Toplevel
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 
@@ -21,6 +21,7 @@ class ConwayTk:
         self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
         self.paused = True
+        self.colors = ['black', 'white', 'red', 'green', 'blue', 'yellow', 'limegreen', 'cyan', 'magenta', 'purple', 'brown']
     
 
     def create_2d_array(self, value: None|int=0, random: bool=False):
@@ -113,6 +114,40 @@ class ConwayTk:
 
     def configure(self):
         """Configure the game parameters."""
+        win = Toplevel(self.root)
+        win.title('Settings')
+
+        rows_label = Label(win, text='Rows:')
+        cols_label = Label(win, text='Columns:')
+        interval_label = Label(win, text='Interval (ms):')
+        live_color_label = Label(win, text='Live Cells:')
+        dead_color_label = Label(win, text='Dead Cells:')
+
+        num_rows = IntVar(win, 24)
+        num_cols = IntVar(win, 48)
+        int_ms = IntVar(win, 100)
+        live_color = StringVar(win, 'white')
+        dead_color = StringVar(win, 'black')
+
+        rows_box = Spinbox(win, textvariable=num_rows, values=list(range(2, 101)), validate='all')
+        cols_box = Spinbox(win, textvariable=num_cols, values=list(range(2, 101)), validate='all')
+        interval_box = Spinbox(win, textvariable=int_ms, values=list(range(1, 5001)), validate='all')
+        live_color_menu = OptionMenu(win, live_color, *self.colors, command=None)
+        dead_color_menu = OptionMenu(win, dead_color, *self.colors, command=None)
+
+        apply_button = Button(win, text='Apply', command=None)
+
+        rows_label.grid(row=0, column=0)
+        cols_label.grid(row=1, column=0)
+        interval_label.grid(row=2, column=0)
+        live_color_label.grid(row=3, column=0)
+        dead_color_label.grid(row=4, column=0)
+        rows_box.grid(row=0, column=1)
+        cols_box.grid(row=1, column=1)
+        interval_box.grid(row=2, column=1)
+        live_color_menu.grid(row=3, column=1)
+        dead_color_menu.grid(row=4, column=1)
+        apply_button.grid(row=5, column=0, columnspan=2)
 
 
     def reset(self):
@@ -187,7 +222,7 @@ class ConwayTk:
         self.file_menu.add_command(label='Pause', command=self.pause, accelerator='|   Space')
         self.file_menu.add_command(label='Reset', command=self.reset, accelerator='|   R')
         self.file_menu.add_command(label='Clear', command=self.clear, accelerator='|   C')
-        # self.file_menu.add_command(label='Configure', command=self.configure, accelerator='|   F')
+        self.file_menu.add_command(label='Configure', command=self.configure, accelerator='|   F')
 
         self.bg_frame.pack(expand=True, fill='both')
         self.grid_frame.pack(side='top', anchor='c')
@@ -204,8 +239,8 @@ class ConwayTk:
         self.root.bind_all('R', lambda _: self.reset())
         self.root.bind_all('c', lambda _: self.clear())
         self.root.bind_all('C', lambda _: self.clear())
-        # self.root.bind_all('f', lambda _: self.configure())
-        # self.root.bind_all('F', lambda _: self.configure())
+        self.root.bind_all('f', lambda _: self.configure())
+        self.root.bind_all('F', lambda _: self.configure())
 
         self.root.focus_force()
         self.root.config(menu=self.menu_bar)
