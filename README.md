@@ -3,11 +3,12 @@
 A decently efficient version of the Game of Life written in Python v3.10.4.
 
 ## Hotkeys
-Save Pattern : S  
-Load Pattern : L  
-Pause Game   : Space  
-Reset Board  : R  
-Clear Board  : C  
+Save Pattern   : S  
+Load Pattern   : L  
+Configure Game : F  
+Pause Game     : Space  
+Reset Board    : R  
+Clear Board    : C  
 
 ---
 
