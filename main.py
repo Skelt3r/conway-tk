@@ -116,6 +116,7 @@ class ConwayTk:
 
     def configure(self):
         """Configure the game parameters."""
+
         def apply():
             """Apply the current configuration settings and reboot the app."""
             self.rows = num_rows.get()
@@ -136,9 +137,9 @@ class ConwayTk:
         live_color_label = Label(win, text='Live Cells:')
         dead_color_label = Label(win, text='Dead Cells:')
 
-        num_rows = IntVar(win, 24)
-        num_cols = IntVar(win, 48)
-        int_ms = IntVar(win, 100)
+        num_rows = IntVar(win, self.rows)
+        num_cols = IntVar(win, self.columns)
+        int_ms = IntVar(win, self.interval)
         live_color = StringVar(win, self.live_color.title())
         dead_color = StringVar(win, self.dead_color.title())
 
