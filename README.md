@@ -6,6 +6,7 @@ A decently efficient version of the Game of Life written in Python v3.10.4.
 Save Pattern   : S  
 Load Pattern   : L  
 Configure Game : F  
+Exit Game      : Alt+F4  
 Pause Game     : Space  
 Reset Board    : R  
 Clear Board    : C  
