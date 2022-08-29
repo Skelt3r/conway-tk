@@ -1,12 +1,11 @@
 from pickle import dump, load
 from random import randint
-from rich import print
 from tkinter import Button, Frame, IntVar, Label, Menu, OptionMenu, Spinbox, StringVar, Tk, Toplevel
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 
 class ConwayTk:
-    def __init__(self, columns: int=48, rows: int=24, interval: int=100, live_color: str='white', dead_color: str='black', random: bool=False):
+    def __init__(self, columns: int=32, rows: int=24, interval: int=120, live_color: str='White', dead_color: str='Black', random: bool=False):
         """
         Accept configuration settings and initialize base variables.
 
@@ -15,16 +14,22 @@ class ConwayTk:
         interval : number of milliseconds between each life cycle
         random : if True, randomly insert live cells into the data array
         """
-        self.rows = rows
-        self.columns = columns
-        self.interval = interval
-        self.live_color = live_color
-        self.dead_color = dead_color
+        try:
+            with open('./settings.dat', 'rb') as file:
+                self.settings = load(file)
+        except FileNotFoundError:
+            self.settings = {'rows': rows, 'columns': columns, 'interval': interval, 'live': live_color, 'dead': dead_color}
+
+        self.rows = self.settings['rows']
+        self.columns = self.settings['columns']
+        self.interval = self.settings['interval']
+        self.live_color = self.settings['live']
+        self.dead_color = self.settings['dead']
         self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
+        self.colors = ['Black', 'White', 'Red', 'Green', 'Blue', 'Yellow', 'Lime Green', 'Cyan', 'Magenta', 'Purple', 'Orange', 'Brown', 'Grey']
         self.paused = True
-        self.colors = ['black', 'white', 'red', 'green', 'blue', 'yellow', 'lime green', 'cyan', 'magenta', 'purple', 'brown']
-    
+
 
     def create_2d_array(self, value: None|int=0, random: bool=False):
         """
@@ -35,19 +40,13 @@ class ConwayTk:
         """
         return [[value if not random else randint(0, 1) for _ in range(self.rows)] for _ in range(self.columns)]
 
-    
-    def loading_screen(self):
-        """Display a loading message while generating the button grid."""
+
+    def draw_grid(self):
+        """Display a loading message while drawing a grid of Tkinter buttons on the screen."""
 
         loading = Label(self.root, font=('Calibri', 36), text='Loading...')
         loading.place(relx=0.45, rely=0.4)
-        self.draw_grid()
-        loading.after(100, loading.destroy)
-
-
-    def draw_grid(self):
-        """Draw a grid of Tkinter buttons on the screen."""
-
+        
         for x in range(self.rows):
             for y in range(self.columns):
                 if self.data_array[y][x] == 0:
@@ -58,6 +57,8 @@ class ConwayTk:
                 button.config(height=2, width=4, bd=1, relief='solid', command=lambda x=x, y=y, b=button: self.click(x, y, b))
                 button.grid(row=x, column=y)
                 self.button_array[y][x] = button
+        
+        loading.after(100, loading.destroy)
 
     
     def get_neighbors(self, x: int, y: int):
@@ -87,13 +88,13 @@ class ConwayTk:
         y : the current y-axis index
         button : the current Button widget
         """
-        if button['bg'] == 'white':
+        if button['bg'] == self.live_color:
             self.data_array[y][x] = 0
             button['bg'] = self.dead_color
         else:
             self.data_array[y][x] = 1
             button['bg'] = self.live_color
-    
+
 
     def save_pattern(self):
         """Save the current pattern."""
@@ -117,19 +118,23 @@ class ConwayTk:
     def configure(self):
         """Configure the game parameters."""
 
-        def apply():
-            """Apply the current configuration settings and reboot the app."""
-            self.rows = num_rows.get()
-            self.columns = num_cols.get()
-            self.interval = int_ms.get()
-            self.live_color = live_color.get()
-            self.dead_color = dead_color.get()
+        def save_config():
+            """Save the current configuration settings and reboot the app."""
+            self.settings['rows'] = num_rows.get()
+            self.settings['columns'] = num_cols.get()
+            self.settings['interval'] = int_ms.get()
+            self.settings['live'] = live_color.get()
+            self.settings['dead'] = dead_color.get()
+            with open('./settings.dat', 'wb') as file:
+                dump(self.settings, file)
             self.root.destroy()
-            self.__init__(self.columns, self.rows, self.interval, self.live_color, self.dead_color, True)
+            self.__init__(random=True)
             self.run()
 
         win = Toplevel(self.root)
         win.title('Settings')
+        win.resizable(0, 0)
+        win.wm_attributes('-toolwindow', True)
 
         rows_label = Label(win, text='Rows:')
         cols_label = Label(win, text='Columns:')
@@ -140,28 +145,32 @@ class ConwayTk:
         num_rows = IntVar(win, self.rows)
         num_cols = IntVar(win, self.columns)
         int_ms = IntVar(win, self.interval)
-        live_color = StringVar(win, self.live_color.title())
-        dead_color = StringVar(win, self.dead_color.title())
+        live_color = StringVar(win, self.live_color)
+        dead_color = StringVar(win, self.dead_color)
 
-        rows_box = Spinbox(win, textvariable=num_rows, from_=2, to=100)
-        cols_box = Spinbox(win, textvariable=num_cols, from_=2, to=100)
-        interval_box = Spinbox(win, textvariable=int_ms, from_=1, to=5000)
-        live_color_menu = OptionMenu(win, live_color, *self.colors, command=lambda _: live_color.set(live_color.get().title()))
-        dead_color_menu = OptionMenu(win, dead_color, *self.colors, command=lambda _: dead_color.set(dead_color.get().title()))
+        rows_box = Spinbox(win, textvariable=num_rows, from_=2, to=100, justify='center', width=12)
+        cols_box = Spinbox(win, textvariable=num_cols, from_=2, to=100, justify='center', width=12)
+        interval_box = Spinbox(win, textvariable=int_ms, from_=1, to=5000, justify='center', width=12)
+        live_color_menu = OptionMenu(win, live_color, *self.colors, command=lambda _: live_color.set(live_color.get()))
+        dead_color_menu = OptionMenu(win, dead_color, *self.colors, command=lambda _: dead_color.set(dead_color.get()))
+        live_color_menu.config(bg='white', relief='sunken', width=10)
+        dead_color_menu.config(bg='white', relief='sunken', width=10)
 
-        apply_button = Button(win, text='Apply', command=apply)
+        save_button = Button(win, text='Save', command=save_config)
+        cancel_button = Button(win, text='Cancel', command=win.destroy)
 
-        rows_label.grid(row=0, column=0)
-        cols_label.grid(row=1, column=0)
-        interval_label.grid(row=2, column=0)
-        live_color_label.grid(row=3, column=0)
-        dead_color_label.grid(row=4, column=0)
-        rows_box.grid(row=0, column=1)
-        cols_box.grid(row=1, column=1)
-        interval_box.grid(row=2, column=1)
-        live_color_menu.grid(row=3, column=1)
-        dead_color_menu.grid(row=4, column=1)
-        apply_button.grid(row=5, column=0, columnspan=2)
+        rows_label.grid(row=0, column=0, padx=1, pady=1, sticky='e')
+        cols_label.grid(row=1, column=0, padx=1, pady=1, sticky='e')
+        interval_label.grid(row=2, column=0, padx=1, pady=1, sticky='e')
+        live_color_label.grid(row=3, column=0, padx=1, pady=1, sticky='e')
+        dead_color_label.grid(row=4, column=0, padx=1, pady=1, sticky='e')
+        rows_box.grid(row=0, column=1, pady=1, sticky='w')
+        cols_box.grid(row=1, column=1, pady=1, sticky='w')
+        interval_box.grid(row=2, column=1, pady=1, sticky='w')
+        live_color_menu.grid(row=3, column=1, pady=1, sticky='w')
+        dead_color_menu.grid(row=4, column=1, pady=1, sticky='w')
+        save_button.grid(row=5, column=0, pady=5, sticky='e')
+        cancel_button.grid(row=5, column=1, padx=10, pady=5, sticky='w')
 
 
     def reset(self):
@@ -222,6 +231,7 @@ class ConwayTk:
 
         self.root = Tk()
         self.root.title('Conway\'s Game of Life')
+        self.root.resizable(0, 0)
         
         self.bg_frame = Frame(self.root, bg='lightgrey')
         self.grid_frame = Frame(self.bg_frame)
@@ -241,7 +251,7 @@ class ConwayTk:
         self.bg_frame.pack(expand=True, fill='both')
         self.grid_frame.pack(side='top', anchor='c')
 
-        self.loading_screen()
+        self.draw_grid()
         self.life(self.paused)
 
         self.root.bind_all('<space>', lambda _: self.pause())
