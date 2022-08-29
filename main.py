@@ -242,18 +242,22 @@ class ConwayTk:
 
         self.menu_bar = Menu(self.root)
         self.file_menu = Menu(self.menu_bar, tearoff=0)
+        self.control_menu = Menu(self.menu_bar, tearoff=0)
 
         self.config_win = Toplevel(self.root)
         self.config_win.destroy()
 
         self.menu_bar.add_cascade(label='File', menu=self.file_menu)
+        self.menu_bar.add_cascade(label='Control', menu=self.control_menu)
         self.file_menu.add_command(label='Save Pattern', command=self.save_pattern, accelerator='|   S')
         self.file_menu.add_command(label='Load Pattern', command=self.load_pattern, accelerator='|   L')
         self.file_menu.add_separator()
         self.file_menu.add_command(label='Configure', command=self.configure, accelerator='|   F')
-        self.file_menu.add_command(label='Pause', command=self.pause, accelerator='|   Space')
-        self.file_menu.add_command(label='Reset', command=self.reset, accelerator='|   R')
-        self.file_menu.add_command(label='Clear', command=self.clear, accelerator='|   C')
+        self.file_menu.add_separator()
+        self.file_menu.add_command(label='Exit', command=self.root.destroy, accelerator='|   Alt+F4')
+        self.control_menu.add_command(label='Pause', command=self.pause, accelerator='|   Space')
+        self.control_menu.add_command(label='Reset', command=self.reset, accelerator='|   R')
+        self.control_menu.add_command(label='Clear', command=self.clear, accelerator='|   C')
 
         self.bg_frame.pack(expand=True, fill='both')
         self.grid_frame.pack(side='top', anchor='c')
