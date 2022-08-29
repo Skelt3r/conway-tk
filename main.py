@@ -133,7 +133,6 @@ class ConwayTk:
             self.__init__(random=True)
             self.run()
 
-        
         if self.config_win.winfo_exists():
             self.config_win.destroy()
         else:
