@@ -12,6 +12,8 @@ class ConwayTk:
         columns : number of columns to generate
         rows : number of rows to generate
         interval : number of milliseconds between each life cycle
+        live_color : color of live cells
+        dead_color : color of dead cells
         random : if True, randomly insert live cells into the data array
         """
         try:
