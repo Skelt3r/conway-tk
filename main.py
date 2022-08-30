@@ -134,6 +134,8 @@ class ConwayTk:
             self.run()
 
         if self.config_win.winfo_exists():
+            self.root.unbind_all('<Return>')
+            self.root.unbind_all('<Escape>')
             self.config_win.destroy()
         else:
             self.config_win = Toplevel(self.root)
@@ -176,6 +178,9 @@ class ConwayTk:
             dead_color_menu.grid(row=4, column=1, pady=1, sticky='w')
             save_button.grid(row=5, column=0, pady=5, sticky='e')
             cancel_button.grid(row=5, column=1, padx=10, pady=5, sticky='w')
+
+            self.root.bind_all('<Return>', lambda _: save_config())
+            self.root.bind_all('<Escape>', lambda _: self.config_win.destroy())
 
 
     def reset(self):
