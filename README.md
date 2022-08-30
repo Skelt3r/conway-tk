@@ -19,7 +19,7 @@ Exit Game      : Alt+F4
 game = ConwayTk(columns=36,          # number of columns to generate
                 rows=24,             # number of rows to generate
                 interval=120,        # number of milliseconds between each life cycle
-                button_size=1,       # accepts values of 1-10
+                button_size=1,       # number used for button scaling, accepts values of 1-10
                 live_color='Orange'  # live cell color
                 dead_color='Black'   # dead cell color
                 random=True)         # if True, randomly insert live cells into the data array            
