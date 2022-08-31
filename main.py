@@ -13,7 +13,7 @@ class ConwayTk:
         columns : number of columns to generate
         rows : number of rows to generate
         interval : number of milliseconds between each life cycle
-        button_size : number used for button scaling, accepts values of 1-10
+        button_size : number used for button scaling, accepts values of 1-3
         live_color : color of live cells
         dead_color : color of dead cells
         random : if True, randomly insert live cells into the data array
@@ -63,8 +63,8 @@ class ConwayTk:
         self.button_array = self.create_2d_array(value=None)
         self.paused = True
 
-        if button_size not in list(range(1, 11)):
-            raise ValueError('button_size must be between 1-10')
+        if button_size not in list(range(1, 4)):
+            raise ValueError('button_size must be between 1-3')
         elif live_color not in self.colors+['Random']:
             raise ValueError(f'live_color must be one of {self.colors+["Random"]}')
         elif dead_color not in self.colors:
@@ -206,18 +206,17 @@ class ConwayTk:
 
     def configure(self):
         """Configure the game parameters."""
+        sizes = {'Small': 1, 'Medium': 2, 'Large': 3}
 
         def save_config():
             """Save the current configuration settings and reboot the app."""
-            if button_size.get() not in list(range(1, 11)):
-                showerror('Invalid Button Size', 'Button Size must be between 1-10.')
-            elif int_ms.get() <= 0:
+            if int_ms.get() <= 0:
                 showerror('Invalid Interval', 'Interval must be a positive integer.')
             else:
                 self.settings['rows'] = num_rows.get()
                 self.settings['columns'] = num_cols.get()
                 self.settings['interval'] = int_ms.get()
-                self.settings['button_size'] = button_size.get()
+                self.settings['button_size'] = sizes[button_size.get()]
                 self.settings['live_color'] = live_color.get()
                 self.settings['dead_color'] = dead_color.get()
 
@@ -248,16 +247,17 @@ class ConwayTk:
             num_rows = IntVar(self.config_win, self.rows)
             num_cols = IntVar(self.config_win, self.columns)
             int_ms = IntVar(self.config_win, self.interval)
-            button_size = IntVar(self.config_win, self.button_size)
+            button_size = StringVar(self.config_win, list(sizes.keys())[self.button_size-1])
             live_color = StringVar(self.config_win, self.live_color)
             dead_color = StringVar(self.config_win, self.dead_color)
 
             rows_box = Spinbox(self.config_win, textvariable=num_rows, from_=2, to=100, justify='center', width=12)
             cols_box = Spinbox(self.config_win, textvariable=num_cols, from_=2, to=100, justify='center', width=12)
             interval_box = Spinbox(self.config_win, textvariable=int_ms, from_=1, to=5000, justify='center', width=12)
-            button_box = Spinbox(self.config_win, textvariable=button_size, from_=1, to=10, justify='center', width=12)
+            button_menu = OptionMenu(self.config_win, button_size, *sizes, command=lambda _: button_size.set(button_size.get()))
             live_color_menu = OptionMenu(self.config_win, live_color, *self.colors+['Random'], command=lambda _: live_color.set(live_color.get()))
             dead_color_menu = OptionMenu(self.config_win, dead_color, *self.colors, command=lambda _: dead_color.set(dead_color.get()))
+            button_menu.config(bg='white', relief='sunken', width=10)
             live_color_menu.config(bg='white', relief='sunken', width=10)
             dead_color_menu.config(bg='white', relief='sunken', width=10)
 
@@ -273,7 +273,7 @@ class ConwayTk:
             rows_box.grid(row=0, column=1, pady=1, sticky='w')
             cols_box.grid(row=1, column=1, pady=1, sticky='w')
             interval_box.grid(row=2, column=1, pady=1, sticky='w')
-            button_box.grid(row=3, column=1, pady=1, sticky='w')
+            button_menu.grid(row=3, column=1, pady=1, sticky='w')
             live_color_menu.grid(row=4, column=1, pady=1, sticky='w')
             dead_color_menu.grid(row=5, column=1, pady=1, sticky='w')
             save_button.grid(row=6, column=0, pady=5, sticky='e')
