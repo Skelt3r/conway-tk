@@ -6,14 +6,14 @@ from tkinter.messagebox import showerror
 
 
 class ConwayTk:
-    def __init__(self, columns: int=32, rows: int=24, interval: int=120, button_size: int=1, live_color: str='White', dead_color: str='Black', random: bool=False):
+    def __init__(self, columns: int=32, rows: int=24, interval: int=120, cell_size: int=1, live_color: str='White', dead_color: str='Black', random: bool=False):
         """
         Accept and validate configuration settings. Initialize base variables.
 
         columns : number of columns to generate
         rows : number of rows to generate
         interval : number of milliseconds between each life cycle
-        button_size : number used for button scaling, accepts values of 1-3
+        cell_size : number used for button scaling, accepts values of 1-3
         live_color : color of live cells
         dead_color : color of dead cells
         random : if True, randomly insert live cells into the data array
@@ -28,7 +28,7 @@ class ConwayTk:
                 'interval': interval,
                 'live_color': live_color,
                 'dead_color': dead_color,
-                'button_size': button_size
+                'cell_size': cell_size
             }
 
         self.colors = [
@@ -56,15 +56,15 @@ class ConwayTk:
         self.rows = self.settings['rows']
         self.columns = self.settings['columns']
         self.interval = self.settings['interval']
-        self.button_size = self.settings['button_size']
+        self.cell_size = self.settings['cell_size']
         self.live_color = self.settings['live_color']
         self.dead_color = self.settings['dead_color']
         self.data_array = self.create_2d_array(random=random)
         self.button_array = self.create_2d_array(value=None)
         self.paused = True
 
-        if button_size not in list(range(1, 4)):
-            raise ValueError('button_size must be between 1-3')
+        if cell_size not in list(range(1, 4)):
+            raise ValueError('cell_size must be between 1-3')
         elif live_color not in self.colors+['Random']:
             raise ValueError(f'live_color must be one of {self.colors+["Random"]}')
         elif dead_color not in self.colors:
@@ -93,8 +93,8 @@ class ConwayTk:
                 else:
                     button = Button(self.grid_frame, bg=self.live_color if self.live_color != 'Random' else choice(self.colors))
 
-                b_size = self.settings['button_size']
-                button.config(height=b_size, width=b_size*2, bd=1, relief='solid', command=lambda x=x, y=y, b=button: self.click(x, y, b))
+                cell_size = self.settings['cell_size']
+                button.config(height=cell_size, width=cell_size*2, bd=1, relief='solid', command=lambda x=x, y=y, b=button: self.click(x, y, b))
                 button.grid(row=x, column=y)
                 self.button_array[y][x] = button
         
@@ -216,7 +216,7 @@ class ConwayTk:
                 self.settings['rows'] = num_rows.get()
                 self.settings['columns'] = num_cols.get()
                 self.settings['interval'] = int_ms.get()
-                self.settings['button_size'] = sizes[button_size.get()]
+                self.settings['cell_size'] = sizes[cell_size.get()]
                 self.settings['live_color'] = live_color.get()
                 self.settings['dead_color'] = dead_color.get()
 
@@ -240,24 +240,24 @@ class ConwayTk:
             rows_label = Label(self.config_win, text='Rows:')
             cols_label = Label(self.config_win, text='Columns:')
             interval_label = Label(self.config_win, text='Interval (ms):')
-            button_label = Label(self.config_win, text='Button Size:')
+            cell_label = Label(self.config_win, text='Cell Size:')
             live_color_label = Label(self.config_win, text='Live Cells:')
             dead_color_label = Label(self.config_win, text='Dead Cells:')
 
             num_rows = IntVar(self.config_win, self.rows)
             num_cols = IntVar(self.config_win, self.columns)
             int_ms = IntVar(self.config_win, self.interval)
-            button_size = StringVar(self.config_win, list(sizes.keys())[self.button_size-1])
+            cell_size = StringVar(self.config_win, list(sizes.keys())[self.cell_size-1])
             live_color = StringVar(self.config_win, self.live_color)
             dead_color = StringVar(self.config_win, self.dead_color)
 
             rows_box = Spinbox(self.config_win, textvariable=num_rows, from_=2, to=100, justify='center', width=12)
             cols_box = Spinbox(self.config_win, textvariable=num_cols, from_=2, to=100, justify='center', width=12)
             interval_box = Spinbox(self.config_win, textvariable=int_ms, from_=1, to=5000, justify='center', width=12)
-            button_menu = OptionMenu(self.config_win, button_size, *sizes, command=lambda _: button_size.set(button_size.get()))
+            cell_menu = OptionMenu(self.config_win, cell_size, *sizes, command=lambda _: cell_size.set(cell_size.get()))
             live_color_menu = OptionMenu(self.config_win, live_color, *self.colors+['Random'], command=lambda _: live_color.set(live_color.get()))
             dead_color_menu = OptionMenu(self.config_win, dead_color, *self.colors, command=lambda _: dead_color.set(dead_color.get()))
-            button_menu.config(bg='white', relief='sunken', width=10)
+            cell_menu.config(bg='white', relief='sunken', width=10)
             live_color_menu.config(bg='white', relief='sunken', width=10)
             dead_color_menu.config(bg='white', relief='sunken', width=10)
 
@@ -267,13 +267,13 @@ class ConwayTk:
             rows_label.grid(row=0, column=0, padx=1, pady=1, sticky='e')
             cols_label.grid(row=1, column=0, padx=1, pady=1, sticky='e')
             interval_label.grid(row=2, column=0, padx=1, pady=1, sticky='e')
-            button_label.grid(row=3, column=0, padx=1, pady=1, sticky='e')
+            cell_label.grid(row=3, column=0, padx=1, pady=1, sticky='e')
             live_color_label.grid(row=4, column=0, padx=1, pady=1, sticky='e')
             dead_color_label.grid(row=5, column=0, padx=1, pady=1, sticky='e')
             rows_box.grid(row=0, column=1, pady=1, sticky='w')
             cols_box.grid(row=1, column=1, pady=1, sticky='w')
             interval_box.grid(row=2, column=1, pady=1, sticky='w')
-            button_menu.grid(row=3, column=1, pady=1, sticky='w')
+            cell_menu.grid(row=3, column=1, pady=1, sticky='w')
             live_color_menu.grid(row=4, column=1, pady=1, sticky='w')
             dead_color_menu.grid(row=5, column=1, pady=1, sticky='w')
             save_button.grid(row=6, column=0, pady=5, sticky='e')
