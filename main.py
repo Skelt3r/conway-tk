@@ -8,7 +8,7 @@ from tkinter.messagebox import showerror
 class ConwayTk:
     def __init__(self, columns: int=32, rows: int=24, interval: int=120, button_size: int=1, live_color: str='White', dead_color: str='Black', random: bool=False):
         """
-        Accept configuration settings and initialize base variables.
+        Accept and validate configuration settings. Initialize base variables.
 
         columns : number of columns to generate
         rows : number of rows to generate
@@ -31,15 +31,6 @@ class ConwayTk:
                 'button_size': button_size
             }
 
-        self.rows = self.settings['rows']
-        self.columns = self.settings['columns']
-        self.interval = self.settings['interval']
-        self.button_size = self.settings['button_size']
-        self.live_color = self.settings['live_color']
-        self.dead_color = self.settings['dead_color']
-        self.data_array = self.create_2d_array(random=random)
-        self.button_array = self.create_2d_array(value=None)
-        self.paused = True
         self.colors = [
             'Black',
             'White',
@@ -62,6 +53,16 @@ class ConwayTk:
             'Brown'
         ]
 
+        self.rows = self.settings['rows']
+        self.columns = self.settings['columns']
+        self.interval = self.settings['interval']
+        self.button_size = self.settings['button_size']
+        self.live_color = self.settings['live_color']
+        self.dead_color = self.settings['dead_color']
+        self.data_array = self.create_2d_array(random=random)
+        self.button_array = self.create_2d_array(value=None)
+        self.paused = True
+
         if button_size not in list(range(1, 11)):
             raise ValueError('button_size must be between 1-10')
         elif live_color not in self.colors+['Random']:
@@ -82,9 +83,8 @@ class ConwayTk:
 
     def draw_grid(self):
         """Display a loading message while drawing a grid of Tkinter buttons on the screen."""
-
         loading = Label(self.root, font=('Calibri', 36), text='Loading...')
-        loading.place(relx=0.45, rely=0.4)
+        loading.place(relx=0.425, rely=0.4)
         
         for x in range(self.rows):
             for y in range(self.columns):
@@ -115,9 +115,8 @@ class ConwayTk:
                 x_ = (x+m+self.rows) % self.rows
                 y_ = (y+n+self.columns) % self.columns
                 total += self.data_array[y_][x_]
-
-        total -= self.data_array[y][x]
-        return total
+                
+        return total-self.data_array[y][x]
     
 
     def click(self, x: int, y: int, button: Button):
@@ -191,7 +190,6 @@ class ConwayTk:
                     for y in range(self.columns):
                         state = self.data_array[y][x]
                         neighbors = self.get_neighbors(x, y)
-
                         if state == 0 and neighbors == 3:
                             self.button_array[y][x].config(bg=self.live_color if self.live_color != 'Random' else choice(self.colors))
                             next_cycle[y][x] = 1
@@ -200,10 +198,8 @@ class ConwayTk:
                             next_cycle[y][x] = 0
                         else:
                             next_cycle[y][x] = state
-
                 self.data_array = next_cycle
                 self.root.after(self.interval, lambda: self.life(self.paused))
-
                 if self.root.destroy:
                     return False
     
@@ -289,7 +285,6 @@ class ConwayTk:
 
     def run(self):
         """Build the GUI and start the game."""
-
         self.root = Tk()
         self.root.title('Conway\'s Game of Life')
         self.root.resizable(0, 0)
@@ -334,8 +329,8 @@ class ConwayTk:
         self.root.bind_all('<Control-c>', lambda _: self.clear())
         self.root.bind_all('<Control-C>', lambda _: self.clear())
 
-        self.root.focus_force()
         self.root.config(menu=self.menu_bar)
+        self.root.focus_force()
         self.root.mainloop()
 
 
