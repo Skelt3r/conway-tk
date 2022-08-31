@@ -1,6 +1,6 @@
 # Conway's Game of Life
 
-A decently efficient version of the Game of Life written in Python v3.10.4.
+A decently efficient version of the Game of Life written in Python (v3.10.4).
 
 ## Hotkeys
 Save Pattern   : Ctrl+S  
@@ -27,6 +27,14 @@ Run `py conwaytk.py` to launch with the default settings, or create your own ins
                     random=True)         # if True, randomly insert live cells into the data array
 >>> game.run()
 ```
+
+Settings can also be modified from the Configure screen within the app:  
+
+![](https://github.com/Skelt3r/conway-tk/blob/main/screenshots/settings.png?raw=true)
+
+Enjoy!  
+
+![](https://github.com/Skelt3r/conway-tk/blob/main/screenshots/game-of-life.png?raw=true)
 ---
 
 Inspired by [Joseph Bakulikira's](https://github.com/Josephbakulikira) [PyGame version](https://github.com/Josephbakulikira/Conway-s-Game-of-life---Python) of the Game of Life.
