@@ -2,14 +2,19 @@
 
 A decently efficient version of the Game of Life written in Python (v3.10.4).
 
-## Hotkeys
-Save Pattern   : Ctrl+S  
-Load Pattern   : Ctrl+L  
-Configure Game : Ctrl+F  
-Reset Board    : Ctrl+R  
-Clear Board    : Ctrl+C  
-Pause Game     : Space  
-Exit Game      : Alt+F4  
+## Controls
+
+| Function       | Hotkey |
+| -------------- | ------ |
+| Save Pattern   | Ctrl+S |
+| Load Pattern   | Ctrl+L |
+| Configure Game | Ctrl+F |
+| Reset Board    | Ctrl+R |
+| Clear Board    | Ctrl+C |
+| Pause Game     | Space  |
+| Exit Game      | Alt+F4 |
+
+Clicking on a cell will toggle it's current state.
 
 ---
 
@@ -28,7 +33,7 @@ Run `py conwaytk.py` to launch with the default settings, or create your own ins
 >>> game.run()
 ```
 
-Settings can also be modified from the Configure screen within the app:  
+Settings can also be modified from the configuration menu within the app:  
 
 ![](https://github.com/Skelt3r/conway-tk/blob/main/screenshots/settings.png?raw=true)
 
