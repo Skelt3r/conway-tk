@@ -4,6 +4,9 @@ A decently efficient version of the Game of Life written in Python (v3.10.4).
 
 ## Controls
 
+Clicking on a cell will toggle it's current state.  
+All other functions are mapped to the hotkeys below and are also accessible through the menu bar.
+
 | Function       | Hotkey |
 | -------------- | ------ |
 | Save Pattern   | Ctrl+S |
@@ -13,8 +16,6 @@ A decently efficient version of the Game of Life written in Python (v3.10.4).
 | Clear Board    | Ctrl+C |
 | Pause Game     | Space  |
 | Exit Game      | Alt+F4 |
-
-Clicking on a cell will toggle it's current state.
 
 ---
 
