@@ -84,7 +84,7 @@ class ConwayTk:
     def draw_grid(self):
         """Display a loading message while drawing a grid of Tkinter buttons on the screen."""
         loading = Label(self.root, font=('Calibri', 36), text='Loading...')
-        loading.place(relx=0.425, rely=0.4)
+        loading.place(relx=0.4, rely=0.4)
         
         for x in range(self.rows):
             for y in range(self.columns):
@@ -289,7 +289,7 @@ class ConwayTk:
         self.root.title('Conway\'s Game of Life')
         self.root.resizable(0, 0)
         
-        self.bg_frame = Frame(self.root, bg='lightgrey')
+        self.bg_frame = Frame(self.root)
         self.grid_frame = Frame(self.bg_frame)
 
         self.menu_bar = Menu(self.root)
