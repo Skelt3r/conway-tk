@@ -2,6 +2,8 @@
 
 A decently efficient version of the Game of Life written in Python (v3.10.4).
 
+If you prefer a minimalist version without all the extra bells and whistles, see [ConwayTkLite](https://github.com/Skelt3r/conway-tk-lite).
+
 ## Controls
 
 Clicking on a cell will toggle it's current state.  
