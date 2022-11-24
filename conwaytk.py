@@ -185,23 +185,20 @@ class ConwayTk:
         next_cycle = self.create_2d_array(value=0)
 
         if not paused:
-            while True:
-                for x in range(self.rows):
-                    for y in range(self.columns):
-                        state = self.data_array[y][x]
-                        neighbors = self.get_neighbors(x, y)
-                        if state == 0 and neighbors == 3:
-                            self.button_array[y][x].config(bg=self.live_color if self.live_color != 'Random' else choice(self.colors))
-                            next_cycle[y][x] = 1
-                        elif state == 1 and (neighbors < 2 or neighbors > 3):
-                            self.button_array[y][x].config(bg=self.dead_color)
-                            next_cycle[y][x] = 0
-                        else:
-                            next_cycle[y][x] = state
-                self.data_array = next_cycle
-                self.root.after(self.interval, lambda: self.life(self.paused))
-                if self.root.destroy:
-                    return False
+            for x in range(self.rows):
+                for y in range(self.columns):
+                    state = self.data_array[y][x]
+                    neighbors = self.get_neighbors(x, y)
+                    if state == 0 and neighbors == 3:
+                        self.button_array[y][x].config(bg=self.live_color if self.live_color != 'Random' else choice(self.colors))
+                        next_cycle[y][x] = 1
+                    elif state == 1 and (neighbors < 2 or neighbors > 3):
+                        self.button_array[y][x].config(bg=self.dead_color)
+                        next_cycle[y][x] = 0
+                    else:
+                        next_cycle[y][x] = state
+            self.data_array = next_cycle
+            self.root.after(self.interval, lambda: self.life(self.paused))
     
 
     def configure(self):
