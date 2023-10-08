@@ -1,3 +1,4 @@
+from const import COLORS
 from pickle import dump, load
 from random import choice, randint
 from tkinter import Button, Frame, IntVar, Label, Menu, OptionMenu, Spinbox, StringVar, Tk, Toplevel
@@ -31,28 +32,7 @@ class ConwayTk:
                 'cell_size': cell_size
             }
 
-        self.colors = [
-            'Black',
-            'White',
-            'Grey',
-            'Green',
-            'Lime Green',
-            'Teal',
-            'Turquoise',
-            'Blue',
-            'Navy Blue',
-            'Sky Blue',
-            'Cyan',
-            'Purple',
-            'Red',
-            'Magenta',
-            'Pink',
-            'Hot Pink',
-            'Yellow',
-            'Orange',
-            'Brown'
-        ]
-
+        self.colors = COLORS
         self.rows = self.settings['rows']
         self.columns = self.settings['columns']
         self.interval = self.settings['interval']
