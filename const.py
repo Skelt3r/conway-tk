@@ -1,0 +1,21 @@
+COLORS = [
+    'Black',
+    'White',
+    'Grey',
+    'Green',
+    'Lime Green',
+    'Teal',
+    'Turquoise',
+    'Blue',
+    'Navy Blue',
+    'Sky Blue',
+    'Cyan',
+    'Purple',
+    'Red',
+    'Magenta',
+    'Pink',
+    'Hot Pink',
+    'Yellow',
+    'Orange',
+    'Brown'
+]
